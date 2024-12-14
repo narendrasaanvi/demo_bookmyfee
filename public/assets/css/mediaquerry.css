@@ -1,0 +1,121 @@
+/* Small laptops (769px to 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    /* Styles for small laptops */
+  
+    .green-gradient {
+        width: 286px;
+    }
+
+    .blue-gradient {
+        width: 358px;
+    }
+
+    .pink-gradient {
+        width: 392px;
+    }
+
+    .dgreen-gradient {
+        width: 269px;
+    }
+
+    .orange-gradient {
+        width: 250px;
+    }
+
+    .footer-gradient {
+        width: 460px !important;
+    }
+
+    .footer2 {
+        width: 460px;
+    }
+
+    .btn1 {
+        width: 180px;
+        font-size: 12.5px;
+    }
+}
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+    /* Styles for tablets and smaller devices */
+
+    .footer-gradient {
+
+        width: 100%;
+    }
+
+    .footer2 {
+    
+	width: 100%;
+}
+
+    .green-gradient {
+         
+	width: 311px;
+}
+
+    .pink-gradient {
+      
+ 	width: 418px;
+}
+    .blue-gradient {
+    
+	width: 356px;
+}
+
+    .orange-gradient {
+    
+        width: 257px;
+}
+  
+}
+
+
+
+/* Mobile devices (up to 465px) */
+@media (max-width: 465px) {
+  
+    .green-gradient {
+        width: 100%;
+        margin: auto;
+    }
+
+    .pink-gradient {
+       width: 100%;
+        margin: auto;
+    }
+
+    .blue-gradient {
+        width: 100%;
+        margin: auto;
+    }
+
+    .orange-gradient {
+      	width: 100%;
+        margin: auto;
+    	margin-left: 0px;
+    }
+	
+    .dgreen-gradient {
+
+	width: 100%;
+        margin: auto;
+    	height: 160px;
+
+}
+	
+	.btn1 {
+
+   	 width: 111px;
+	 height: 46px;
+         font-size: 11px;
+    }
+
+	.flexcolumnmobile{
+
+	    flex-direction: column;
+}
+
+
+}

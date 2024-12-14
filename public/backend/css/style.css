@@ -1,0 +1,111 @@
+.dashbord {
+    color: #1d2327 !important;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.nav-link {
+    display: block;
+    padding: 0.3rem 0.5rem;
+}
+
+.layout-navbar-fixed .wrapper .brand-link {
+    background-color: #161824  !important;
+}
+
+.bg-info {
+    background-color: #161824  !important;
+}
+
+.card-primary:not(.card-outline) > .card-header {
+    background-color: #161824  !important;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #161824  !important;
+    border-color: #161824  !important;
+    box-shadow: none;
+}
+
+.main-sidebar {
+    background-color: #161824 ;
+}
+
+aside.main-sidebar.sidebar-dark-primary.elevation-4 {
+    background: #161824 ;
+}
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+    background-color: #206bc4 !important;
+    color: #fff;
+}
+.profile-badge {
+    border: 1px solid #c1c1c1;
+    padding: 5px;
+    position: relative;
+ }
+
+ .user-detail {
+    background-color: #fff;
+    position: relative;
+    padding: 10px 0px 10px 0px;
+    color: #8B8B89;
+ }
+
+ .user-detail h3 {
+    margin: 0px;
+    margin: 0px 0px 5px 0px;
+    color: #000;
+ }
+
+ .user-detail p {
+    font-size: 14px;
+ }
+
+ .user-detail .btn {
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #DEDEDE;
+    border-radius: 0px;
+    color: black;
+ }
+
+ .user-detail .btn i {
+    color: #D35B4D;
+    padding-right: 18px;
+ }
+
+
+ .profile-pic img {
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+    border: solid 1px #eee;
+ }
+
+ label {
+    font-size: .875rem;
+    font-weight: 500;
+}
+.pagination .page-link {
+    color: #6c757d; /* Bootstrap secondary color */
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #5864f3; /* Your custom active color */
+    border-color: #5864f3;
+    color: white;
+}
+
+.btn-link {
+    color: #5864f3; /* Matching link color */
+}
+
+.btn-link:disabled {
+    color: #6c757d;
+    pointer-events: none;
+}
+.pagination .page-item.disabled .page-link {
+color: #6c757d; /* Bootstrap secondary color for disabled state */
+pointer-events: none; /* Prevent clicks */
+cursor: not-allowed; /* Change cursor to indicate no action */
+}

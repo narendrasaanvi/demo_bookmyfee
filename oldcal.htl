@@ -1,0 +1,270 @@
+<?php
+/* Template Name: Shipping Calculator */
+get_header();
+?>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    .card {
+        box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+        margin-bottom: 1rem;
+    }
+
+    .shipping-price-outer .courier-logo {
+        height: 50px;
+    }
+
+    .shipping-price-outer .shipping-cost {
+        color: #91959b;
+        font-size: 25px;
+        font-weight: 600;
+    }
+
+    .shipping-price-outer .courier-name {
+        color: #000;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .loader {
+        display: none;
+        border: 4px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 4px solid #3498db;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #ffffff;
+    }
+
+    span#select2-delivery-country-container {
+        line-height: 18px;
+    }
+</style>
+
+<div class="container custom-page-content mt-5">
+<!--     <h3 class="mb-4"><?php the_title(); ?></h3> -->
+	<h3 class="mb-4">Calculate Your International Shipping Cost</h3>
+    <div class="card p-4 shadow-sm">
+        <form id="shipping-calculator-form" class="form-row">
+            <!-- Form Fields -->
+            <div class="form-group col-md-4">
+                <label>Origin Country:</label>
+                <select name="origin_country" class="form-control" required>
+                    <option value="PL" selected>Poland </option>
+					<option value="PL" selected>Germany</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4 d-none">
+                <label>Origin Postcode:</label>
+                <input name="origin_postcode" value="74-500" type="text" class="form-control" />
+            </div>
+            <div class="form-group col-md-4">
+                <label>Delivery Country:</label>
+                <select name="delivery_country" id="delivery-country" class="form-control" required>
+                    <option value="">Select Country</option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label>Delivery Postcode:</label>
+                <input name="delivery_postcode" required type="text" class="form-control" />
+            </div>
+            <div class="form-group col-md-3">
+                <label>Package Weight (kg):</label>
+                <div class="input-group">
+                    <div class="input-group-prepend subtract" data-target="#weight">
+                        <span class="input-group-text">-</span>
+                    </div>
+                    <input type="text" class="form-control text-center" name="weight" id="weight" value="0.0">
+                    <div class="input-group-append add" data-target="#weight">
+                        <span class="input-group-text">+</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 form-group">
+                <label>Length (cm):</label>
+                <div class="input-group">
+                    <div class="input-group-prepend subtract" data-target="#length">
+                        <span class="input-group-text">-</span>
+                    </div>
+                    <input type="text" class="form-control text-center" name="length" id="length" value="0.0">
+                    <div class="input-group-append add" data-target="#length">
+                        <span class="input-group-text">+</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 form-group">
+                <label>Width (cm):</label>
+                <div class="input-group">
+                    <div class="input-group-prepend subtract" data-target="#width">
+                        <span class="input-group-text">-</span>
+                    </div>
+                    <input type="text" class="form-control text-center" name="width" id="width" value="0.0">
+                    <div class="input-group-append add" data-target="#width">
+                        <span class="input-group-text">+</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 form-group">
+                <label>Height (cm):</label>
+                <div class="input-group">
+                    <div class="input-group-prepend subtract" data-target="#height">
+                        <span class="input-group-text">-</span>
+                    </div>
+                    <input type="text" class="form-control text-center" name="height" id="height" value="0.0">
+                    <div class="input-group-append add" data-target="#height">
+                        <span class="input-group-text">+</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 form-group">
+                <label>Currancy:</label>
+                <div class="input-group">
+                <select id="origin_country" name="origin_country" style="width: 150px;">  
+                        <option value="EUR" data-src="">EUR</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Get An Estimate</button>
+        </form>
+    </div>
+    <div class="loader" id="loading-spinner"></div>
+    <div id="shipping-result" class="mt-4"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 with custom template for options
+        $('#delivery-country').select2({
+            placeholder: "Select a country",
+            allowClear: true,
+            templateResult: formatCountryOption, // Function to format options
+            templateSelection: formatCountrySelection // Function to format selected option
+        });
+
+        // Add and subtract weight/size functionality
+        $('.add').click(function() {
+            let target = $(this).data('target');
+            let currentValue = parseFloat($(target).val());
+            $(target).val((currentValue + 0.5).toFixed(1)); // Increment by 0.5
+        });
+
+        $('.subtract').click(function() {
+            let target = $(this).data('target');
+            let currentValue = parseFloat($(target).val());
+            if (currentValue > 0) {
+                $(target).val((currentValue - 0.5).toFixed(1)); // Decrement by 0.5
+            }
+        });
+
+        // Handle country selection change
+        $('#delivery-country').on('change', function() {
+            const selectedOption = $(this).find('option:selected');
+            const flagUrl = selectedOption.data('flag'); // Get flag URL from data attribute
+            const flagImg = $('#country-flag');
+
+            if (flagUrl) {
+                flagImg.attr('src', flagUrl).show(); // Show flag
+            } else {
+                flagImg.hide(); // Hide flag if no country is selected
+            }
+        });
+    });
+
+    // Function to format the options in the dropdown
+    function formatCountryOption(option) {
+        if (!option.id) {
+            return option.text; // Return the text if it’s the placeholder
+        }
+        const flag = $(option.element).data('flag'); // Get the flag URL
+        const $option = $(
+            `<span><img src="${flag}" style="height: 20px; margin-right: 5px;" /> ${option.text}</span>`
+        );
+        return $option; // Return the formatted option
+    }
+
+    // Function to format the selected option
+    function formatCountrySelection(option) {
+        if (!option.id) {
+            return option.text; // Return the text if it’s the placeholder
+        }
+        const flag = $(option.element).data('flag'); // Get the flag URL
+        const $selection = $(
+            `<span><img src="${flag}" style="height: 18px; margin-right: 5px;" /> ${option.text}</span>`
+        );
+        return $selection; // Return the formatted selection
+    }
+
+    async function fetchCountryList() {
+        try {
+            const response = await fetch('https://www.europaforwards.com/app/api/country-list');
+            const countries = await response.json();
+            const deliveryCountrySelect = $('#delivery-country');
+
+            countries.forEach(country => {
+                const option = new Option(country.name, country.sort_name, false, false);
+                // Store flag URL in data attribute for easy access
+                $(option).attr('data-flag', country.flag);
+                deliveryCountrySelect.append(option);
+            });
+
+            deliveryCountrySelect.trigger('change');
+        } catch (error) {
+            console.error('Error fetching country list:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchCountryList);
+
+    document.getElementById('shipping-calculator-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const loadingSpinner = document.getElementById('loading-spinner');
+        loadingSpinner.style.display = 'block';
+
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('https://www.europaforwards.com/app/api/shipping-calculator', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.text();
+            document.getElementById('shipping-result').innerHTML = result;
+
+        } catch (error) {
+            console.error('Error fetching shipping data:', error);
+        } finally {
+            loadingSpinner.style.display = 'none';
+        }
+    });
+</script>
+
+
+<?php
+get_footer();
+?>
